@@ -1,3 +1,37 @@
+// handling sign-in and sign-out
+function loggingin() {
+	var provider = new firebase.auth.GoogleAuthProvider();
+	firebase.auth().signInWithPopup(provider);
+}
+
+function loggingout() {
+	firebase.auth().signOut();
+}
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+	document.getElementById("sign-out").removeAttribute("hidden");
+		document.getElementById("sign-in").setAttribute("hidden", "true");
+  } else {
+    // No user is signed in.
+	document.getElementById("sign-in").removeAttribute("hidden");
+		document.getElementById("sign-out").setAttribute("hidden", "true");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 function loggingin() {
 	var provider = new firebase.auth.GoogleAuthProvider();
 	firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -62,8 +96,5 @@ function picking() {
 });
 	
 }
-/*
-function angs() {
-	document.getElementById("try-ang").value = "Its working!";
-}
+
 */

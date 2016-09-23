@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>Chat Threading</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"> </script>
+</head>
+<body>
+	<div id="login-strip">
+		<button id="sign-in" onclick="loggingin()">Sign in with Google</button>;
+		<button id="sign-out" onclick="loggingout()">Sign out</button>
+	</div>
+	
+	<div id="friend-list">
+		
+	</div>
+	
+	<div id="chat-screen">
+		
+	</div>
+	
+	<div id="chat-buttons">
+		
+	</div>
+	
+	<!-- Part to initialize firebase and include javascript file -->
+	<script src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+	<script>
+		// Initialize Firebase
+		var config = {
+		apiKey: "AIzaSyCLc7ikXup7BTPZCBGrbLfkUhsLfwSJbW8",
+		authDomain: "learningfirebase-54b37.firebaseapp.com",
+		databaseURL: "https://learningfirebase-54b37.firebaseio.com",
+		storageBucket: "learningfirebase-54b37.appspot.com",
+		messagingSenderId: "575199665735"
+		};
+		firebase.initializeApp(config);
+	</script>
+	<script src="scripts/main.js"></script>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+<!doctype html>
+
+<html>
+<head>
+	<title>learning firebase</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"> </script>
+</head>
+
+<body>
+	<div id="div1">
+		<button id="sign-in" onclick="loggingin()">Sign in with Google</button>
+		<button id="sign-out" onclick="loggingout()">Sign out</button>
+	</div>
+	
+	<div id="div2" ng-app>
+		Welcome to firebase community!
+		<p>Name : <input type="text" id="ex1" ng-model="name"></p>
+ 	<h1>Hello {{name}}</h1>
+	</div>
+	<div id="div3">
+		<button id="check-global" onclick="checking()">check</button>
+		<input id="profpic" type="file"></input><br>
+		<button id="save-image" onclick="picking()">Save Image</button>
+		
+	</div>
+	
+	
+	<script src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
+	<script>
+		// Initialize Firebase
+		var config = {
+		apiKey: "AIzaSyCLc7ikXup7BTPZCBGrbLfkUhsLfwSJbW8",
+		authDomain: "learningfirebase-54b37.firebaseapp.com",
+		databaseURL: "https://learningfirebase-54b37.firebaseio.com",
+		storageBucket: "learningfirebase-54b37.appspot.com",
+		messagingSenderId: "575199665735"
+		};
+		firebase.initializeApp(config);
+	</script>
+	<script src="scripts/main.js"></script>
+	
+</body>
+
+</html>
+
+-->
+

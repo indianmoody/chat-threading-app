@@ -13,16 +13,43 @@ firebase.auth().onAuthStateChanged(function(user) {
     // User is signed in.
 	document.getElementById("sign-out").removeAttribute("hidden");
 		document.getElementById("sign-in").setAttribute("hidden", "true");
+		console.log("logged-in!");
   } else {
     // No user is signed in.
 	document.getElementById("sign-in").removeAttribute("hidden");
 		document.getElementById("sign-out").setAttribute("hidden", "true");
+		console.log("logged-out!");
   }
 });
 
+function loadMessages() {
+	
+	console.log("loadMessages!");
+	
+	firebase.database().ref('temps').off();
+	
+	var setMessage = function(data) {
+		console.log("setMessage!");
+		var val = data.val();
+		displayMessage(data.key, val.name);
+    }
+	
+	firebase.database().ref('temps').limitToLast(12).on('child_added', setMessage);
+	firebase.database().ref('temps').limitToLast(12).on('child_changed', setMessage);
+}
 
+function displayMessage(key, name) {
+	console.log("diaplayMessage!");
+	console.log(name);
+	
+}
 
-
+function testing() {
+	var customer = firebase.auth().currentUser;
+	document.getElementById("chat-screen").innerHTML = customer.displayName;
+	//var t = document.createTextNode(customer.displayName);
+	//elements.appendChild(t);
+}
 
 
 

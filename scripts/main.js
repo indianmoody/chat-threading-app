@@ -9,24 +9,42 @@ function loggingout() {
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-	document.getElementById("sign-out").removeAttribute("hidden");
+	if (user) {
+		// User is signed in.
+		document.getElementById("sign-out").removeAttribute("hidden");
 		document.getElementById("sign-in").setAttribute("hidden", "true");
 		console.log("logged-in!");
-  } else {
-    // No user is signed in.
-	document.getElementById("sign-in").removeAttribute("hidden");
+		
+		// check if current user id is in userList. if not, add one
+		var customer = firebase.auth().currentUser;
+		
+		firebase.database().ref('userlist').once("value", function(snapshot) {
+			if(!snapshot.child(customer.uid).exists()) {
+				firebase.database().ref('userlist/' + customer.uid).set ({
+				name: customer.displayName,
+				id: customer.uid
+				});
+			}
+		});
+		
+		// load userlist in "friend-list", assign each user a button
+		
+		
+	} 
+  
+	else {
+		// No user is signed in.
+		document.getElementById("sign-in").removeAttribute("hidden");
 		document.getElementById("sign-out").setAttribute("hidden", "true");
 		console.log("logged-out!");
-  }
+	}
 });
 
 function loadMessages() {
 	
 	console.log("loadMessages!");
 	
-	firebase.database().ref('temps').off();
+	//firebase.database().ref('temps').off();
 	
 	var setMessage = function(data) {
 		console.log("setMessage!");
@@ -34,21 +52,26 @@ function loadMessages() {
 		displayMessage(data.key, val.name);
     }
 	
-	firebase.database().ref('temps').limitToLast(12).on('child_added', setMessage);
-	firebase.database().ref('temps').limitToLast(12).on('child_changed', setMessage);
+	firebase.database().ref('temps').limitToLast(2).on('child_added', setMessage);
+	firebase.database().ref('temps').limitToLast(2).on('child_changed', setMessage);
 }
 
 function displayMessage(key, name) {
 	console.log("diaplayMessage!");
-	console.log(name);
+	console.log(key);
 	
 }
 
 function testing() {
 	var customer = firebase.auth().currentUser;
-	document.getElementById("chat-screen").innerHTML = customer.displayName;
-	//var t = document.createTextNode(customer.displayName);
-	//elements.appendChild(t);
+	
+	firebase.database().ref('tempss/temp1').once("value", function(snapshot) {
+		if(snapshot.child('temp4').exists()) {
+			firebase.database().ref('tempss/temp1/temp4').set ({
+				name: "Karen Moody"
+			});
+		}
+	});
 }
 
 

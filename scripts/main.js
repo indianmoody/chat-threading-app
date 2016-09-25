@@ -53,8 +53,8 @@ function loadUsers() {
 }
 
 function displayUser(key, name) {
-	console.log(key);
-	console.log(name);
+	console.log('key: ' + key);
+	console.log('name: ' + name);
 	
 	var listform = document.getElementById("friend-list");
 	var para4 = document.createElement("input");
@@ -80,16 +80,18 @@ function loadTopicButtons(iden) {
 			}
 		});
 	
-	/*
-	var setMessage = function(data) {
-		console.log("setMessage!");
+	
+	
+	
+	var getMessage = function(data) {
+		console.log("getMessage!");
 		var val = data.val();
-		displayMessage(data.key, val.name);
+		displayMessage(data.key, val.chat);
     }
 	
-	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_added', setMessage);
-	firebase.database().ref('temps').limitToLast(2).on('child_changed', setMessage);
-	*/
+	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_added', getMessage);
+	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_changed', getMessage);
+	
 }
 
 function loadMessages() {
@@ -108,9 +110,9 @@ function loadMessages() {
 	firebase.database().ref('temps').limitToLast(2).on('child_changed', setMessage);
 }
 
-function displayMessage(key, name) {
-	console.log("diaplayMessage!");
-	console.log(key);
+function displayMessage(key, chat) {
+	console.log("displayMessage!");
+	console.log(chat);
 	
 }
 

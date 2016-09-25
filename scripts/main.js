@@ -28,7 +28,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		});
 		
 		// load userlist in "friend-list", assign each user a button
-		
+		loadUsers();
 		
 	} 
   
@@ -39,6 +39,58 @@ firebase.auth().onAuthStateChanged(function(user) {
 		console.log("logged-out!");
 	}
 });
+
+function loadUsers() {
+	var setUser = function(data) {
+		console.log("setUser!");
+		var val = data.val();
+		displayUser(data.key, val.name);
+    }
+	
+	firebase.database().ref('userlist').limitToLast(20).on('child_added', setUser);
+	firebase.database().ref('userlist').limitToLast(20).on('child_changed', setUser);
+	
+}
+
+function displayUser(key, name) {
+	console.log(key);
+	console.log(name);
+	
+	var listform = document.getElementById("friend-list");
+	var para4 = document.createElement("input");
+    para4.setAttribute("id",key);
+    para4.setAttribute("type","button");
+    para4.setAttribute("value",name);
+	para4.addEventListener('click', function() { loadTopicButtons(this.id) });
+	listform.appendChild(para4);
+	 var br = document.createElement('br');
+     listform.appendChild(br);
+        
+}
+
+function loadTopicButtons(iden) {
+	
+	var customer = firebase.auth().currentUser;
+	
+	firebase.database().ref('messages/' + customer.uid + '/' + iden).once("value", function(snapshot) {
+			if(!snapshot.child("basic").exists()) {
+				firebase.database().ref('messages/' + customer.uid + '/' + iden + '/' + 'basic').set ({
+				chat: "please start conversation!"
+				});
+			}
+		});
+	
+	/*
+	var setMessage = function(data) {
+		console.log("setMessage!");
+		var val = data.val();
+		displayMessage(data.key, val.name);
+    }
+	
+	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_added', setMessage);
+	firebase.database().ref('temps').limitToLast(2).on('child_changed', setMessage);
+	*/
+}
 
 function loadMessages() {
 	

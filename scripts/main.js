@@ -71,11 +71,11 @@ function displayUser(key, name) {
 function loadTopicButtons(iden) {
 	
 	var customer = firebase.auth().currentUser;
-	
+	// if there is no prior conversation, create 'basic' section
 	firebase.database().ref('messages/' + customer.uid + '/' + iden).once("value", function(snapshot) {
 			if(!snapshot.child("basic").exists()) {
 				firebase.database().ref('messages/' + customer.uid + '/' + iden + '/' + 'basic').set ({
-				chat: "please start conversation!"
+					chat: "please start conversation!"
 				});
 			}
 		});
@@ -87,6 +87,15 @@ function loadTopicButtons(iden) {
 		console.log("getMessage!");
 		var val = data.val();
 		displayMessage(data.key, val.chat);
+		
+		// creating button and allocating attributes
+		var topicform = document.getElementById("chat-buttons");
+		var tempChatButton = document.createElement("input");
+		tempChatButton.setAttribute("id",data.key);
+		tempChatButton.setAttribute("type","button");
+		tempChatButton.setAttribute("value",data.key);
+		//tempChatButton.addEventListener('click', function() { loadTopicButtons(this.id) });
+		topicform.appendChild(tempChatButton);
     }
 	
 	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_added', getMessage);
@@ -112,7 +121,7 @@ function loadMessages() {
 
 function displayMessage(key, chat) {
 	console.log("displayMessage!");
-	console.log(chat);
+	console.log(key);
 	
 }
 

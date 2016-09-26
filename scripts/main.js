@@ -70,10 +70,11 @@ function displayUser(key, name) {
 
 function loadTopicButtons(iden) {
 	
+	document.getElementById("chat-screen").innerHTML = "";
+	
 	//create 'add topic' and input box in 'add-topic' division
 	var newtopicform = document.getElementById("add-topic");
 	newtopicform.innerHTML = "";
-	document.getElementById("chat-screen").innerHTML = "";
 	
 	var inputbox = document.createElement("input");
     inputbox.setAttribute("id","topicbox");
@@ -96,9 +97,16 @@ function loadTopicButtons(iden) {
 	// if there is no prior conversation, create 'basic' section
 	firebase.database().ref('messages/' + customer.uid + '/' + iden).once("value", function(snapshot) {
 			if(!snapshot.child("basic").exists()) {
+				//in current user database
 				firebase.database().ref('messages/' + customer.uid + '/' + iden + '/' + 'basic/asdasd').set ({
 					chat: "please start conversation!"
 				});
+				
+				//in friend's database
+				firebase.database().ref('messages/' + iden + '/' + customer.uid + '/' + 'basic/asdasd').set ({
+					chat: "please start conversation!"
+				});
+				
 			}
 		});
 	
@@ -159,6 +167,10 @@ function appendTopic(friendId) {
 	var customer = firebase.auth().currentUser;
 	var newTopic = document.getElementById("topicbox").value;
 	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + newTopic + '/asdasd').set ({
+					chat: "please start conversation!"
+				});
+	
+	firebase.database().ref('messages/' + friendId + '/' + customer.uid + '/' + newTopic + '/asdasd').set ({
 					chat: "please start conversation!"
 				});
 	

@@ -70,11 +70,14 @@ function displayUser(key, name) {
 
 function loadTopicButtons(iden) {
 	
+	var topicform = document.getElementById("chat-buttons");
+	topicform.innerHTML = "";
+	
 	var customer = firebase.auth().currentUser;
 	// if there is no prior conversation, create 'basic' section
 	firebase.database().ref('messages/' + customer.uid + '/' + iden).once("value", function(snapshot) {
 			if(!snapshot.child("basic").exists()) {
-				firebase.database().ref('messages/' + customer.uid + '/' + iden + '/' + 'basic').set ({
+				firebase.database().ref('messages/' + customer.uid + '/' + iden + '/' + 'basic/asdasd').set ({
 					chat: "please start conversation!"
 				});
 			}
@@ -86,15 +89,14 @@ function loadTopicButtons(iden) {
 	var getMessage = function(data) {
 		console.log("getMessage!");
 		var val = data.val();
-		displayMessage(data.key, val.chat);
+		//displayMessage(data.key, val.chat);
 		
 		// creating button and allocating attributes
-		var topicform = document.getElementById("chat-buttons");
 		var tempChatButton = document.createElement("input");
 		tempChatButton.setAttribute("id",data.key);
 		tempChatButton.setAttribute("type","button");
 		tempChatButton.setAttribute("value",data.key);
-		//tempChatButton.addEventListener('click', function() { loadTopicButtons(this.id) });
+		tempChatButton.addEventListener('click', function() { loadMessages(iden, this.id) }); //display messages under this topic
 		topicform.appendChild(tempChatButton);
     }
 	
@@ -103,25 +105,33 @@ function loadTopicButtons(iden) {
 	
 }
 
-function loadMessages() {
+function loadMessages(friendId, topicId) {
 	
+	document.getElementById("chat-screen").innerHTML = "";
 	console.log("loadMessages!");
+	var customer = firebase.auth().currentUser;
 	
 	//firebase.database().ref('temps').off();
 	
 	var setMessage = function(data) {
 		console.log("setMessage!");
 		var val = data.val();
-		displayMessage(data.key, val.name);
+		displayMessage(data.key, val.chat);
     }
 	
-	firebase.database().ref('temps').limitToLast(2).on('child_added', setMessage);
-	firebase.database().ref('temps').limitToLast(2).on('child_changed', setMessage);
+	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(2).on('child_added', setMessage);
+	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(2).on('child_changed', setMessage);
 }
 
 function displayMessage(key, chat) {
 	console.log("displayMessage!");
-	console.log(key);
+	console.log(chat);
+	
+	var msgbox = document.getElementById("chat-screen");
+	var t = document.createTextNode(chat);
+	msgbox.appendChild(t);
+	var br = document.createElement('br');
+    msgbox.appendChild(br);
 	
 }
 

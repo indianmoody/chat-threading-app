@@ -70,6 +70,25 @@ function displayUser(key, name) {
 
 function loadTopicButtons(iden) {
 	
+	//create 'add topic' and input box in 'add-topic' division
+	var newtopicform = document.getElementById("add-topic");
+	newtopicform.innerHTML = "";
+	document.getElementById("chat-screen").innerHTML = "";
+	
+	var inputbox = document.createElement("input");
+    inputbox.setAttribute("id","topicbox");
+    inputbox.setAttribute("type","text");
+	newtopicform.appendChild(inputbox);
+	
+	var newtopicbutton = document.createElement("input");
+    newtopicbutton.setAttribute("id","newtopicbutton");
+    newtopicbutton.setAttribute("type","button");
+	newtopicbutton.setAttribute("value","add new topic");
+	newtopicbutton.addEventListener('click', function() { appendTopic(iden) });
+	newtopicform.appendChild(newtopicbutton);
+	
+	
+	// for topic buttons in chat-buttons
 	var topicform = document.getElementById("chat-buttons");
 	topicform.innerHTML = "";
 	
@@ -132,6 +151,18 @@ function displayMessage(key, chat) {
 	msgbox.appendChild(t);
 	var br = document.createElement('br');
     msgbox.appendChild(br);
+	
+}
+
+function appendTopic(friendId) {
+	
+	var customer = firebase.auth().currentUser;
+	var newTopic = document.getElementById("topicbox").value;
+	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + newTopic + '/asdasd').set ({
+					chat: "please start conversation!"
+				});
+	
+	document.getElementById("topicbox").value = "";
 	
 }
 

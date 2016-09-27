@@ -37,6 +37,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 		document.getElementById("sign-in").removeAttribute("hidden");
 		document.getElementById("sign-out").setAttribute("hidden", "true");
 		//console.log("logged-out!");
+		
+		document.getElementById("chat-screen").innerHTML = "";
+		document.getElementById("message-screen").innerHTML = "";
+		document.getElementById("friend-list").innerHTML = "";
+		document.getElementById("chat-buttons").innerHTML = "";
+		document.getElementById("add-topic").innerHTML = "";
 	}
 });
 

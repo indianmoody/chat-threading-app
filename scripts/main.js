@@ -13,7 +13,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		// User is signed in.
 		document.getElementById("sign-out").removeAttribute("hidden");
 		document.getElementById("sign-in").setAttribute("hidden", "true");
-		console.log("logged-in!");
+		//console.log("logged-in!");
 		
 		// check if current user id is in userList. if not, add one
 		var customer = firebase.auth().currentUser;
@@ -36,25 +36,25 @@ firebase.auth().onAuthStateChanged(function(user) {
 		// No user is signed in.
 		document.getElementById("sign-in").removeAttribute("hidden");
 		document.getElementById("sign-out").setAttribute("hidden", "true");
-		console.log("logged-out!");
+		//console.log("logged-out!");
 	}
 });
 
 function loadUsers() {
 	var setUser = function(data) {
-		console.log("setUser!");
+		//console.log("setUser!");
 		var val = data.val();
 		displayUser(data.key, val.name);
     }
 	
 	firebase.database().ref('userlist').limitToLast(20).on('child_added', setUser);
-	firebase.database().ref('userlist').limitToLast(20).on('child_changed', setUser);
+	//firebase.database().ref('userlist').limitToLast(20).on('child_changed', setUser);
 	
 }
 
 function displayUser(key, name) {
-	console.log('key: ' + key);
-	console.log('name: ' + name);
+	//console.log('key: ' + key);
+	//console.log('name: ' + name);
 	
 	var listform = document.getElementById("friend-list");
 	var para4 = document.createElement("input");
@@ -71,6 +71,7 @@ function displayUser(key, name) {
 function loadTopicButtons(iden) {
 	
 	document.getElementById("chat-screen").innerHTML = "";
+	document.getElementById("message-screen").innerHTML = "";
 	
 	//create 'add topic' and input box in 'add-topic' division
 	var newtopicform = document.getElementById("add-topic");
@@ -114,7 +115,7 @@ function loadTopicButtons(iden) {
 	
 	
 	var getMessage = function(data) {
-		console.log("getMessage!");
+		//console.log("getMessage!");
 		var val = data.val();
 		//displayMessage(data.key, val.chat);
 		
@@ -128,31 +129,57 @@ function loadTopicButtons(iden) {
     }
 	
 	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_added', getMessage);
-	firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_changed', getMessage);
+	//firebase.database().ref('messages/' + customer.uid + '/' + iden).limitToLast(10).on('child_changed', getMessage);
 	
 }
 
-function loadMessages(friendId, topicId) {
+function loadMessages(friendId, topicId) {		// send message functionality can be set here
 	
 	document.getElementById("chat-screen").innerHTML = "";
-	console.log("loadMessages!");
+	//console.log("loadMessages!");
 	var customer = firebase.auth().currentUser;
 	
-	//firebase.database().ref('temps').off();
+	
+	// *IMPORTANT: to check repetition of messages in chat screen
+	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).off();
+	firebase.database().ref('messages/' + friendId + '/' + customer.uid + '/' + topicId).off();
+	
+	// division for new message text and button
+	var sandeshBox = document.getElementById("message-screen");
+	sandeshBox.innerHTML = "written!";
+	
+	// screen to write new message
+	var msgScreen = document.createElement("input");
+	msgScreen.setAttribute("id","msgScreenId");
+	msgScreen.setAttribute("type","text");
+	sandeshBox.appendChild(msgScreen);
+	
+	// send button for new message
+	var sendButton = document.createElement("input");
+	sendButton.setAttribute("id","sendButtonId");
+	sendButton.setAttribute("type","button");
+	sendButton.setAttribute("value","send");
+	sendButton.addEventListener('click', function() { sendMessage(customer.uid, friendId, topicId) });
+	sandeshBox.appendChild(sendButton);
+	
 	
 	var setMessage = function(data) {
-		console.log("setMessage!");
+		//console.log("setMessage!");
 		var val = data.val();
 		displayMessage(data.key, val.chat);
     }
 	
-	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(2).on('child_added', setMessage);
-	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(2).on('child_changed', setMessage);
+	firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(10).on('child_added', setMessage);
+	//firebase.database().ref('messages/' + customer.uid + '/' + friendId + '/' + topicId).limitToLast(10).on('child_changed', setMessage);
+}
+
+function activeTopicId(topicId) {
+	
 }
 
 function displayMessage(key, chat) {
-	console.log("displayMessage!");
-	console.log(chat);
+	//console.log("displayMessage!");
+	//console.log(chat);
 	
 	var msgbox = document.getElementById("chat-screen");
 	var t = document.createTextNode(chat);
@@ -176,6 +203,22 @@ function appendTopic(friendId) {
 	
 	document.getElementById("topicbox").value = "";
 	
+}
+
+function sendMessage(customerId, friendId, topicId) {
+	var sandesh = document.getElementById("msgScreenId").value;
+	if (sandesh != null) {
+		firebase.database().ref('messages/' + customerId + '/' + friendId + '/' + topicId).push({
+			chat: sandesh
+		});
+		
+		firebase.database().ref('messages/' + friendId + '/' + customerId + '/' + topicId).off();
+		
+		firebase.database().ref('messages/' + friendId + '/' + customerId + '/' + topicId).push({
+			chat: sandesh
+		});
+		
+	}
 }
 
 function testing() {
